@@ -27,19 +27,19 @@ Token is word separate by white space, for example 3 token line:
 Define you prompt string here. You can use colors escape code, for highlight you prompt,
 for example this prompt will green color (if you terminal supports color)*/
 //#define _PROMPT_DEFAULT "\033[32mIRin >\033[0m "	// green color
-#define _PROMPT_DEFAULT "\033[32mIRin >\033[0m "	// green color
+#define _PROMPT_DEFAULT "\033[32meeutils >\033[0m "	// green color
 //#define _PROMPT_DEFAULT "IRin > "
 
 /*
 Define prompt text (without ESC sequence, only text) prompt length, it needs because if you use
 ESC sequence, it's not possible detect only text length*/
-#define _PROMPT_LEN       7
+#define _PROMPT_LEN       10
 
 /*Define it, if you wanna use completion functional, also set completion callback in you code,
 now if user press TAB calls 'copmlitetion' callback. If you no need it, you can just set 
 NULL to callback ptr and do not use it, but for memory saving tune, 
 if you are not going to use it - disable this define.*/
-#define _USE_COMPLETE
+#undef _USE_COMPLETE
 
 /*Define it, if you wanna use history. It s work's like bash history, and
 set stored value to cmdline, if UP and DOWN key pressed. Using history add
@@ -65,22 +65,22 @@ If not defined, use my own u16int_to_str variant, it's save about 800 byte of co
 on AVR (avr-gcc build).
 Try to build with and without, and compare total code size for tune library.
 */
-#define _USE_LIBC_STDIO
+#undef _USE_LIBC_STDIO
 
 /*
 Enable 'interrupt signal' callback, if user press Ctrl+C */
-#define _USE_CTLR_C
+#undef _USE_CTLR_C
 
 /*
 Print prompt at 'microrl_init', if enable, prompt will print at startup, 
 otherwise first prompt will print after first press Enter in terminal
 NOTE!: Enable it, if you call 'microrl_init' after your communication subsystem 
 already initialize and ready to print message */
-#undef _ENABLE_INIT_PROMPT
+#define _ENABLE_INIT_PROMPT
 
 /*
 New line symbol */
-#define _ENDL_LF
+#define _ENDL_CR
 
 #if defined(_ENDL_CR)
 #define ENDL "\r"
