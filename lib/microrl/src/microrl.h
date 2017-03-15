@@ -3,8 +3,8 @@
 
 #include "config.h"
 
-#define true  1
-#define false 0
+//#define true  1
+//#define false 0
 
  /* define the Key codes */
 #define KEY_NUL 0 /**< ^@ Null character */
