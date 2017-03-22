@@ -34,18 +34,20 @@ void cli_print(const char * str) {
 
 int cli_execute (int argc, const char * const * argv) {
     int i = 0;
-    Serial.print("\033[2K");
+    Serial.println("\033[0m");
     while (i < argc) {
         if (strcmp(argv[i], "help") == 0) {
-            cli_print_help();
+            cli_help();
         } else if (strcmp(argv[i], "clear") == 0) {
-            Serial.print("\033[2J\033[H");
-        } else if (strcmp(argv[i], "rx") == 0) {
-            cli_print_rx_buffer();
+            cli_clear();
+        } else if (strcmp(argv[i], "diag") == 0) {
+            cli_diag();
         } else {
-            Serial.print("command: '");
+            Serial.print("Command '\033[33m");
             Serial.print((char*)argv[i]);
-            Serial.print("' not found.\n\r");
+            Serial.print("\033[0m' not found. ");
+            Serial.println("Use '\033[33mhelp\033[0m' to see command list");
+            return 0;
         }
         i++;
     }
@@ -53,17 +55,42 @@ int cli_execute (int argc, const char * const * argv) {
 }
 
 
-void cli_print_help() {
-    Serial.print("microrl v");
-    Serial.println(MICRORL_LIB_VER);    
+void cli_help() {
+    Serial.println("Available commands:");
+    Serial.println("  \033[33mhelp\033[0m    - show command list");
+    Serial.println("  \033[33mclear\033[0m   - clear screen");
+    Serial.println("  \033[33mdiag\033[0m    - diagnostic function");
 }
 
 
-void cli_print_rx_buffer() {
-    Serial.println("rx buffer:");
-    for (byte k = 0; k < FIFO_SIZE(rx_fifo); k++) {
-        if (rx_fifo.buf[k] < 16) Serial.print("0");
-        Serial.print(rx_fifo.buf[k], HEX);
-        ((k + 1) & 0x0F)? Serial.print(" ") : Serial.println("");
+void cli_clear(){
+    Serial.print("\033[2J\033[H");
+}
+
+
+void cli_diag() {
+    char ch;
+    Serial.print("uart RX buffer (");
+    Serial.print(FIFO_SIZE(rx_fifo));
+    Serial.println("bytes):");
+    for (byte i = 0; i < FIFO_SIZE(rx_fifo) / 16; i++) {
+        // вывод hex представления буфера
+        Serial.print("  ");
+        for (byte k = 0; k < 16; k++) {
+            ch = rx_fifo.buf[i*16+k];
+            if (ch < 16) Serial.print("0");
+            Serial.print(ch, HEX);
+            Serial.print(" ");
+            if (k == 7) Serial.print(" ");
+        }
+        // вывод символьного представления буфера
+        Serial.print(" | ");
+        for (byte k = 0; k < 16; k++) {
+            ch = rx_fifo.buf[i*16+k];
+            if (ch < 32 || ch > 126) ch = '.';
+            Serial.print(ch);
+            if (k == 7) Serial.print(" ");
+        }
+        Serial.println(" |");
     }
 }

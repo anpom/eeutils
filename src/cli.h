@@ -20,9 +20,11 @@ void cli_print(const char * str);
 
 int cli_execute (int argc, const char * const * argv);
 
-void cli_print_help();
+void cli_help();
 
-void cli_print_rx_buffer();
+void cli_clear();
+
+void cli_diag();
 
 #endif /* CLI_H */
 
